@@ -8,7 +8,11 @@ import edu.miu.cse.vsms.model.VService;
 import edu.miu.cse.vsms.repository.EmployeeRepository;
 import edu.miu.cse.vsms.repository.VehicleServiceRepository;
 import edu.miu.cse.vsms.service.VehicleService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.Optional;
 
 
 @org.springframework.stereotype.Service
@@ -22,6 +26,28 @@ public class VehicleServiceImpl implements VehicleService {
     public VehicleServiceResponseDto assignService(ServiceRequestDto request) {
         // Write your code here
 
-        return null;
+        Employee employee = employeeRepository.findById(request.employeeId())
+                .orElseThrow(() -> new EntityNotFoundException("Employee not found with id " + request.employeeId()));
+
+        VService vService = new VService(
+                request.serviceName(),
+                request.cost(),
+                request.vehicleType(),
+                employee
+        );
+
+        employee.setVServices(List.of(vService));
+
+        employeeRepository.save(employee);
+
+        VService saved = vehicleServiceRepository.save(vService);
+        VehicleServiceResponseDto vehicleServiceResponseDto = new VehicleServiceResponseDto(
+                saved.getId(),
+                saved.getServiceName(),
+                saved.getCost(),
+                saved.getVehicleType()
+        );
+
+        return vehicleServiceResponseDto;
     }
 }

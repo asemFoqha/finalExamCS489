@@ -9,8 +9,12 @@ import edu.miu.cse.vsms.service.EmployeeService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,22 +25,37 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeResponseDto addEmployee(EmployeeRequestDto request) {
         // Write your code here
-
-        return null;
+        Employee employee = new Employee();
+        employee.setName(request.name());
+        employee.setEmail(request.email());
+        employee.setPhone(request.phone());
+        employee.setHireDate(request.hireDate());
+        Employee savedEmployee = employeeRepository.save(employee);
+        return mapToResponseDto(savedEmployee);
     }
 
     @Override
     public List<EmployeeResponseDto> getAllEmployees() {
         // Write your code here
 
-        return null;
+        List<Employee> employees = employeeRepository.findAll();
+        List<EmployeeResponseDto> employeeResponseDtos = new ArrayList<>();
+        for (Employee employee : employees) {
+            employeeResponseDtos.add(mapToResponseDto(employee));
+        }
+        return employeeResponseDtos;
     }
 
     @Override
     public EmployeeResponseDto getEmployeeById(Long id) {
         // Write your code here
 
-        return null;
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Employee not found with id " + id));
+        if (employee != null) {
+            return mapToResponseDto(employee);
+        }
+        throw new EntityNotFoundException("Employee with id " + id + " not found");
     }
 
     @Override
@@ -50,27 +69,27 @@ public class EmployeeServiceImpl implements EmployeeService {
             switch (key) {
                 case "name":
                     // Write your code here
-
+                    employee.setName(value.toString());
                     break;
                 case "email":
                     // Write your code here
-
+                    employee.setEmail(value.toString());
                     break;
                 case "phone":
                     // Write your code here
-
+                    employee.setPhone(value.toString());
                     break;
                 case "hireDate":
                     // Write your code here
-
+                    employee.setHireDate(LocalDate.parse(value.toString()));
                     break;
                 default:
                     throw new IllegalArgumentException("Invalid field: " + key);
             }
         });
         // Write your code here
-
-        return null;
+        Employee savedEmployee = employeeRepository.save(employee);
+        return mapToResponseDto(savedEmployee);
     }
 
     private EmployeeResponseDto mapToResponseDto(Employee employee) {
