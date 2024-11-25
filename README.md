@@ -1,3 +1,5 @@
+NOTE: kindly find the screenshots inside the scr file in a folder named screenshots, thank you.
+
 **POST: http://localhost:8080/api/v1/employees**
 ```
 {
@@ -161,7 +163,3 @@
     ]
 }
 ```
-
-
-
-NOTE: kindly find the screenshots inside the scr file in a folder named screenshots, thank you.
