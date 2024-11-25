@@ -36,18 +36,15 @@ public class VehicleServiceImpl implements VehicleService {
                 employee
         );
 
-        employee.setVServices(List.of(vService));
-
+        employee.getVServices().add(vService);
+        VService saved = vehicleServiceRepository.save(vService);
         employeeRepository.save(employee);
 
-        VService saved = vehicleServiceRepository.save(vService);
-        VehicleServiceResponseDto vehicleServiceResponseDto = new VehicleServiceResponseDto(
+        return new VehicleServiceResponseDto(
                 saved.getId(),
                 saved.getServiceName(),
                 saved.getCost(),
                 saved.getVehicleType()
         );
-
-        return vehicleServiceResponseDto;
     }
 }

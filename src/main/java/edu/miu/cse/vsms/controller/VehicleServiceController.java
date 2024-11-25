@@ -25,5 +25,6 @@ public class VehicleServiceController {
         VehicleServiceResponseDto vehicleServiceResponseDto = vehicleService.assignService(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(vehicleServiceResponseDto);
     }
+
     
 }
